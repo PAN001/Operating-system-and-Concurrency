@@ -1,0 +1,21 @@
+Task2:
+
+假设不把文件分开
+实现方法：linkedlist：缺点：必须要从头遍历
+
+
+正常打开文件时，返回一个文件描述符（文件在file table里对应的index）。这里，这个index就是一个随机生成的数字。
+有了index，就可以在file system找到对应的文件(File entry）。获取meta-data。
+
+复杂的话，每个File enrey包含一个指向inode的指针。更多的meta-data通过这个指针获取到
+
+1. 讨论continous和block的区别。优缺点
+
+2. disk表示方法：
+	1. bitmap
+	2. linkedlist
+
+
+Task3：
+1. 描述问题：bounded buffer problem
+2. 
