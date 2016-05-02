@@ -2,6 +2,8 @@
 #include <time.h>
 #include <stdlib.h>
 #include <pthread.h>
+#include <unistd.h>
+#include <semaphore.h>
 
 #define SIZE_OF_MEMORY 200
 #define NUM_OF_FILES 20
@@ -9,20 +11,15 @@
 #define MAX_LENGTH 10
 #define MIN_LENGTH 2
 
-//
-memset (str,'-',6);
-
-
 // prototypes
-struct node;
-struct producer_parms;
-struct fileRecord;
+// struct node;
+// struct producer_parms;
+// struct fileRecord;
 
 // memory block
 typedef struct node *ptrtonode;
 typedef ptrtonode memory;
 typedef struct node nodetype;
-
 // file record
 typedef struct fileRecord* fileRecordPtr; 
 
@@ -35,16 +32,22 @@ void printBlocks(memory mem);
 void printFiles(char* str);
 void printFileTable(fileRecordPtr fileTable, int size);
 void* producer(void* parameters);
+void* consumer(void* parameters);
+
 
 
 // global variable declarations
-char* diskStartPtr = (char*) malloc(sizeof(char) * SIZE_OF_MEMORY); // starting address of the continus memory, which is used to emaluate the disk
-memory logicalDiskStartPt = NULL; // logical disk memory representation
-fileRecordPtr fileTable = (fileRecordPtr) malloc(sizeof(struct fileRecord) * MAX_LENGTH); // file table for existent files
+char* diskStartPtr = NULL; // starting address of the continus memory, which is used to emaluate the disk
+memory logicalDiskStartPtr = NULL; // logical disk memory representation
+fileRecordPtr fileTable = NULL;
 
-mutex buffer_mutex; // similar to "semaphore buffer_mutex = 1", but different (see notes below)
-semaphore fillCount = 0;
-semaphore emptyCount = 1; // 1 means there is enough space for inserting the file
+// mutex diskMutex; // similar to "semaphore buffer_mutex = 1", but different (see notes below)
+sem_t numOfFilesLeft;
+pthread_mutex_t mutex;  
+int numOfFilesEver = 0;
+// sem_t ; // 1 means there is enough space for inserting the file
+
+
 
 // definition
 struct node
@@ -60,7 +63,7 @@ struct fileRecord
 {
 	int index;
 	int size;
-	int startLocation;
+	char* startLocation;
 };
 
 struct producer_parms
@@ -97,6 +100,7 @@ void logicalDiskDeallocation(memory men, int s, int size)
 	ptrtonode tmp = men->next;
 	while(tmp!= NULL) {
 		if((tmp -> start) <= s && (s + size) <= (tmp -> end)) {
+			printf("Delete file at %d with size %d\n", s, size);
 
 			ptrtonode newBlock;
 			newBlock = (ptrtonode)malloc(sizeof(nodetype));
@@ -115,6 +119,7 @@ void logicalDiskDeallocation(memory men, int s, int size)
 			newBlock2 -> next = tmp -> next;
 			tmp -> next = newBlock;
 			newBlock -> next = newBlock2;
+
 			return;
 		}
 		tmp = tmp -> next;
@@ -205,11 +210,14 @@ char* genRandomString(int minLength, int maxLength)
 }
 
 void printBlocks(memory mem) {
+	printf("###########################################\n");
+	printf("The logical disk is: \n");
 	ptrtonode tmp = mem -> next;
 	while(tmp != NULL) {
 		printf("the start is %d, the hols is %d, the end is %d\n", tmp->start, tmp->hole, tmp->end);
 		tmp = tmp -> next;
 	}
+	printf("###########################################\n");
 }
 
 void printFiles(char* str) {
@@ -226,10 +234,13 @@ void printFiles(char* str) {
 }
 
 void printFileTable(fileRecordPtr fileTable, int size) {
+	printf("###########################################\n");
+	printf("The file table is: \n");
 	int i;
 	for(i = 0;i < size;i++) {
-		printf("index is %d, size is %d, start location is %d\n", fileTable[i].index, fileTable[i].size, fileTable[i].startLocation);
+		printf("%d: index is %d, size is %d, start location is %p\n", i, fileTable[i].index, fileTable[i].size, fileTable[i].startLocation);
 	}
+	printf("###########################################\n");
 }
 
 void test(memory startPtr) {
@@ -319,38 +330,35 @@ void test(memory startPtr) {
 }
 
 void* producer(void* parameters) {
-	srand((unsigned) time(NULL));
-	int count = 0;
-	while(1) {
-		// generate a random file
+	int tick = 0; // mark the number of loops
+	while(numOfFilesEver < NUM_OF_FILES) {
+    	// generate a random file
 		int random, i;
 		char* str;
 		int length = (rand() % (MAX_LENGTH - MIN_LENGTH + 1)) + MIN_LENGTH;
 
-		if ((str = (char*) malloc(length)) == NULL )
-		{
+		if ((str = (char*) malloc(length)) == NULL ) {
 			printf("Malloc failed!\n");
-			break;;
+			exit(0);
 		}
 
-		for (i = 0; i < length - 1; i++)
-		{
+		for (i = 0; i < length - 1; i++) {
 			random = rand() % 128;
 			str[i] = random;
 		}
 		str[length - 1] = '\0';
-		// 生成新文件结束
-		
 
-		int startLocation = bestFitAllocation(startPtr, length, count);
+
+    	pthread_mutex_lock(&mutex); // wait until no other thread uses the disk
+    	// Here, no other threads could access the disk
+
+    	printf("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$\n");
+    	printf("The %d producer starts\n", tick);
+		int startLocation = bestFitAllocation(logicalDiskStartPtr, length, numOfFilesEver);
 		if(startLocation == -1) {
 			printf("no sufficient space\n");
-			printf("the last length is %d\n", length);
-			break;
 		}
 		else {
-			printf("the start location is %d, and the length is %d, the random string is %s\n", startLocation, length, str);
-
 			// put into disk
 			int i;
 			for(i = 0;i < length;i++) {
@@ -358,31 +366,94 @@ void* producer(void* parameters) {
 			}
 
 			// update the file table
-			int index = count;
+			int index = numOfFilesEver;
 			int size = length;
 			int realStartLocation = diskStartPtr + startLocation;
 			struct fileRecord newFileRecord;
 			newFileRecord.index = index;
 			newFileRecord.size = size;
 			newFileRecord.startLocation = realStartLocation;
-			fileTable[count] = newFileRecord;
+			fileTable[numOfFilesEver] = newFileRecord;
 
-			count++;
+			numOfFilesEver++;
+			numOfFilesLeft++;
 		}
+
+		printBlocks(logicalDiskStartPtr);
+		// printFiles(diskStartPtr);
+		printFileTable(fileTable, numOfFilesEver);
+		printf("The %d producer ends\n", tick);
+		printf("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$\n");
+
+		tick++;
+		/* Release the buffer */
+		pthread_mutex_unlock(&mutex);
+
+		if (tick % 2 == 1) sleep(1); // interleave
 	}
-	printBlocks(startPtr);
-	printFiles(diskStartPtr);
-	printFileTable(fileTable, count);
-	return NULL;
+	printf("producer has already generated %d files\n", NUM_OF_FILES);
+	exit(1);
+	// return NULL;
+}
+
+void* consumer(void* parameters) {
+	int id = (int)parameters;
+	int random;
+	int tick = 0;;
+	while(1) {
+		sem_wait(&numOfFilesLeft); // wait until there are files left
+		// Here, there are enough files to delete
+
+		pthread_mutex_lock(&mutex); // wait until no other thread uses the disk
+		// Here, no other threads could access the disk
+
+		random = rand() % numOfFilesEver;
+		printf("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$\n");
+		if(fileTable[random].index > 0) { // there is this file
+    		printf("The %d ticks of the consumer %d starts\n", tick, id);
+			int size = fileTable[random].size;
+			char* startPtr = fileTable[random].startLocation;
+			int offset = diskStartPtr - startPtr;
+			logicalDiskDeallocation(logicalDiskStartPtr, offset, size); // remove the file from logical disk
+			memset (diskStartPtr, '-', offset); // delete the file from the disk
+
+			fileTable[random].index = -1; // set the index of the corresponding file to -1
+			numOfFilesLeft--;
+		}
+		else {
+			printf("the current file is already deleted\n");
+		}
+		printBlocks(logicalDiskStartPtr);
+		// printFiles(diskStartPtr);
+		printFileTable(fileTable, numOfFilesEver);
+		printf("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$\n");
+    	printf("The %d ticks of the consumer %d starts\n", tick, id);
+
+    	tick++;
+		/* Release the buffer */
+		pthread_mutex_unlock(&mutex);
+
+		if (tick % 2 == 1) sleep(1); // interleave
+	}
 }
 
 int main(void) {
 	// initialize
+	diskStartPtr = (char*) malloc(sizeof(char) * SIZE_OF_MEMORY);
+	fileTable = (fileRecordPtr) malloc(sizeof(struct fileRecord) * NUM_OF_FILES); // file table for existent files
+
+	srand((unsigned) time(NULL));
 	logicalDiskStartPtr = createLogicalDisk();
 	initializeLogicalDisk(logicalDiskStartPtr, 0, 0 + SIZE_OF_MEMORY);
+	
+	sem_init(&numOfFilesEver, 0, 0); // at the beginning, there are no files
+	pthread_mutex_init(&mutex, NULL);
+
 	int i;
-	for(i = 0;i < SIZE_OF_MEMORY;i++) {
-		fileTable[]
+	for(i = 0;i < NUM_OF_FILES;i++) {
+		fileTable[i].index = -2; // indicate that the file has not been initialized yet
+		fileTable[i].size = -1;
+		fileTable[i].startLocation = NULL;
 	}
 
 
@@ -396,14 +467,14 @@ int main(void) {
     // create producer thread
 	if(pthread_create(&producerId, NULL, &producer, NULL) != 0) {
 		printf("producer thread created failed\n");
-		exit(0)
+		exit(0);
 	}
 
 	// create consumer thread
 	for(i = 0;i < NUM_OF_CONSUMERS;i++) {
-		if(pthread_create(&consumerIds[i], NULL, &consumer, NULL) != 0) {
+		if(pthread_create(&consumerIds[i], NULL, &consumer, i) != 0) {
 			printf("consumer %d thread created failed\n", i);
-			exit(0)
+			exit(0);
 		}
 	}
 

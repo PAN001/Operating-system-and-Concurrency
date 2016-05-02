@@ -190,11 +190,13 @@ char* genRandomString(int minLength, int maxLength)
 }
 
 void printBlocks(memory mem) {
+	printf("###########################################\n");
 	ptrtonode tmp = mem -> next;
 	while(tmp != NULL) {
 		printf("the start is %d, the hols is %d, the end is %d\n", tmp->start, tmp->hole, tmp->end);
 		tmp = tmp -> next;
 	}
+	printf("###########################################\n");
 }
 
 void printFiles(char* str) {
@@ -211,10 +213,12 @@ void printFiles(char* str) {
 }
 
 void printFileTable(fileRecordPtr fileTable, int size) {
+	printf("###########################################\n");
 	int i;
 	for(i = 0;i < size;i++) {
-		printf("index is %d, size is %d, start location is %d\n", fileTable[i].index, fileTable[i].size, fileTable[i].startLocation);
+		printf("%d: index is %d, size is %d, start location is %d\n", i, fileTable[i].index, fileTable[i].size, fileTable[i].startLocation);
 	}
+	printf("###########################################\n");
 }
 
 void test(memory startPtr) {
