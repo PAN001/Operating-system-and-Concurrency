@@ -376,7 +376,8 @@ void* producer(void* parameters) {
 			fileTable[numOfFilesEver] = newFileRecord;
 
 			numOfFilesEver++;
-			numOfFilesLeft++;
+			sem_post(&numOfFilesLeft);
+			// numOfFilesLeft++;
 		}
 
 		printBlocks(logicalDiskStartPtr);
@@ -415,7 +416,7 @@ void* consumer(void* parameters) {
 			char* startPtr = fileTable[random].startLocation;
 			int offset = diskStartPtr - startPtr;
 			logicalDiskDeallocation(logicalDiskStartPtr, offset, size); // remove the file from logical disk
-			memset (diskStartPtr, '-', offset); // delete the file from the disk
+			memset (diskStartPtr, '-', sizeof(char) * offset); // delete the file from the disk
 
 			fileTable[random].index = -1; // set the index of the corresponding file to -1
 			numOfFilesLeft--;
