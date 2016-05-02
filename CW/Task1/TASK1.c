@@ -18,14 +18,15 @@
 int main(int argc,char *argv[]) {
 	int i, status;
 	pid_t pid2;
-	int shm_fd = shm_open(SHARED_MEMORY_NAME, O_RDWR | O_CREAT, 0666); // 申请一个内存
+	int shm_fd = shm_open(SHARED_MEMORY_NAME, O_RDWR | O_CREAT, 0666); // creates and opens a new, or opens an existing, POSIX shared memory object
 	if(shm_fd == -1)
 	{
 		printf("failed to open shared memory\n");
 		exit(1); 
 	}
-	if(ftruncate(shm_fd, SIZE_OF_MEMORY) == -1) { // 分配内存大小
+	if(ftruncate(shm_fd, SIZE_OF_MEMORY) == -1) { // truncate a file to a specified length
 		printf("failed to set size of memory\n");
+		exit(1);
 	}
 
 	// Map the shared memory object in to the processes’ logical address space using mmap, specifying the
@@ -33,7 +34,7 @@ int main(int argc,char *argv[]) {
 	// the file descriptor for the shared object, and the offset (usually 0). 
 	// Best practice is to specify NULL for the address location, thereby allowing Linux to decide itself 
 	// where to attach the object into the logical address space, and returning the memory.
-	int *i_ptr = mmap(NULL, SIZE_OF_MEMORY, PROT_READ | PROT_WRITE, MAP_SHARED, shm_fd, 0); // i_ptr指针所指向的内存即为共享内存
+	int *i_ptr = mmap(NULL, SIZE_OF_MEMORY, PROT_READ | PROT_WRITE, MAP_SHARED, shm_fd, 0); // map the file into memory
 
 	// generate RandInt
 	srand((unsigned)time(NULL)); 
@@ -48,19 +49,22 @@ int main(int argc,char *argv[]) {
 	else if(pid == 0) { // first child process
 		execlp("./ChildP1", "ChildP1", NULL);
 		printf("failed to run ChildP1\n");
+		exit(1);
 	}
 	else { // parent process
 		waitpid(pid, &status, WUNTRACED);
 		pid2 = fork();
 		if(pid2 < 0) {
 			printf("fork error\n");
+			exit(1);
 		} 
 		else if(pid2 == 0) { // second child process
 			execlp("./ChildP2", "ChildP2", NULL);
 		}
 		else { // parent process
 			waitpid(pid, &status, WUNTRACED);
-
+			printf("failed to run ChildP1\n");
+			exit(1);
 		}
 	}
 
@@ -82,7 +86,7 @@ int main(int argc,char *argv[]) {
 	if (munmap(i_ptr, SIZE_OF_MEMORY) == -1) // 取消参数start所指的映射内存起始地址
 		perror("Error un-mmapping the file");
 
-	shm_unlink( SHARED_MEMORY_NAME ); // 解除绑定
-	shmctl(shm_fd, IPC_RMID, 0); // 删除共享内存
+	shm_unlink( SHARED_MEMORY_NAME ); // unlink POSIX shared memory objects
+	shmctl(shm_fd, IPC_RMID, 0); // mark the segment to be destroyed
 	return 0;
 }

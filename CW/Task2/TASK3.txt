@@ -1,0 +1,338 @@
+[zy14897@cs-linux Task2]$ ./TASK3
+$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+The 0 producer starts at time 1204
+Insert file 0 at 0 with size 2
+###########################################
+The logical disk is: 
+the start is 0, the hole is 0, the end is 2
+the start is 2, the hole is 198, the end is 200
+###########################################
+###########################################
+The file table is: 
+0: index is 0, size is 2, start location is 0x1ce4010, logical location (offset) is 0
+The file content is: \
+###########################################
+The 0 producer ends
+$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+
+
+
+$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+The 0 ticks of the consumer 0 starts at time 1532
+Delete file at 0 with size 2
+###########################################
+The logical disk is: 
+the start is 0, the hole is 200, the end is 200
+###########################################
+###########################################
+The file table is: 
+0: index is -1, size is 2, start location is 0x1ce4010, logical location (offset) is 0
+The file content before overriden is: __
+###########################################
+The 0 ticks of the consumer 0 ends
+$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+
+
+
+$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+The 0 ticks of the consumer 1 starts at time 1772
+the current file 0 is already deleted
+The 0 ticks of the consumer 1 ends
+$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+
+
+
+$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+The 1 producer starts at time 1001751
+Insert file 1 at 0 with size 10
+###########################################
+The logical disk is: 
+the start is 0, the hole is 0, the end is 10
+the start is 10, the hole is 190, the end is 200
+###########################################
+###########################################
+The file table is: 
+0: index is -1, size is 2, start location is 0x1ce4010, logical location (offset) is 0
+The file content before overriden is: __
+1: index is 1, size is 10, start location is 0x1ce4010, logical location (offset) is 0
+The file content is: lhXDs!*
+###########################################
+The 1 producer ends
+$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+
+
+
+$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+The 2 producer starts at time 1001922
+Insert file 2 at 10 with size 9
+###########################################
+The logical disk is: 
+the start is 0, the hole is 0, the end is 10
+the start is 10, the hole is 0, the end is 19
+the start is 19, the hole is 181, the end is 200
+###########################################
+###########################################
+The file table is: 
+0: index is -1, size is 2, start location is 0x1ce4010, logical location (offset) is 0
+The file content before overriden is: __
+1: index is 1, size is 10, start location is 0x1ce4010, logical location (offset) is 0
+The file content is: lhXDs!*
+2: index is 2, size is 9, start location is 0x1ce401a, logical location (offset) is 10
+The file content is: IRJV^Evz
+###########################################
+The 2 producer ends
+$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+
+
+
+$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+The 0 ticks of the consumer 2 starts at time 1002047
+Delete file at 10 with size 9
+###########################################
+The logical disk is: 
+the start is 0, the hole is 0, the end is 10
+the start is 10, the hole is 190, the end is 200
+###########################################
+###########################################
+The file table is: 
+0: index is -1, size is 2, start location is 0x1ce4010, logical location (offset) is 0
+The file content before overriden is: __
+1: index is 1, size is 10, start location is 0x1ce4010, logical location (offset) is 0
+The file content is: lhXDs!*
+2: index is -1, size is 9, start location is 0x1ce401a, logical location (offset) is 10
+The file content before overriden is: _________
+###########################################
+The 0 ticks of the consumer 2 ends
+$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+
+
+
+$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+The 1 ticks of the consumer 0 starts at time 1002205
+the current file 0 is already deleted
+The 1 ticks of the consumer 0 ends
+$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+
+
+
+$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+The 1 ticks of the consumer 1 starts at time 1002295
+the current file 0 is already deleted
+The 1 ticks of the consumer 1 ends
+$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+
+
+
+$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+The 3 producer starts at time 2002189
+Insert file 3 at 10 with size 3
+###########################################
+The logical disk is: 
+the start is 0, the hole is 0, the end is 10
+the start is 10, the hole is 0, the end is 13
+the start is 13, the hole is 187, the end is 200
+###########################################
+###########################################
+The file table is: 
+0: index is -1, size is 2, start location is 0x1ce4010, logical location (offset) is 0
+The file content before overriden is: __
+1: index is 1, size is 10, start location is 0x1ce4010, logical location (offset) is 0
+The file content is: lhXDs!*
+2: index is -1, size is 9, start location is 0x1ce401a, logical location (offset) is 10
+The file content before overriden is: _________
+3: index is 3, size is 3, start location is 0x1ce401a, logical location (offset) is 10
+The file content is: mX
+###########################################
+The 3 producer ends
+$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+
+
+
+$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+The 4 producer starts at time 2002359
+Insert file 4 at 13 with size 2
+###########################################
+The logical disk is: 
+the start is 0, the hole is 0, the end is 10
+the start is 10, the hole is 0, the end is 13
+the start is 13, the hole is 0, the end is 15
+the start is 15, the hole is 185, the end is 200
+###########################################
+###########################################
+The file table is: 
+0: index is -1, size is 2, start location is 0x1ce4010, logical location (offset) is 0
+The file content before overriden is: __
+1: index is 1, size is 10, start location is 0x1ce4010, logical location (offset) is 0
+The file content is: lhXDs!*
+2: index is -1, size is 9, start location is 0x1ce401a, logical location (offset) is 10
+The file content before overriden is: _________
+3: index is 3, size is 3, start location is 0x1ce401a, logical location (offset) is 10
+The file content is: mX
+4: index is 4, size is 2, start location is 0x1ce401d, logical location (offset) is 13
+The file content is: 
+###########################################
+The 4 producer ends
+$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+
+
+
+$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+The 1 ticks of the consumer 2 starts at time 2002511
+the current file 0 is already deleted
+The 1 ticks of the consumer 2 ends
+$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+
+
+
+$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+The 2 ticks of the consumer 0 starts at time 2002598
+Delete file at 13 with size 2
+###########################################
+The logical disk is: 
+the start is 0, the hole is 0, the end is 10
+the start is 10, the hole is 0, the end is 13
+the start is 13, the hole is 187, the end is 200
+###########################################
+###########################################
+The file table is: 
+0: index is -1, size is 2, start location is 0x1ce4010, logical location (offset) is 0
+The file content before overriden is: __
+1: index is 1, size is 10, start location is 0x1ce4010, logical location (offset) is 0
+The file content is: lhXDs!*
+2: index is -1, size is 9, start location is 0x1ce401a, logical location (offset) is 10
+The file content before overriden is: _________
+3: index is 3, size is 3, start location is 0x1ce401a, logical location (offset) is 10
+The file content is: mX
+4: index is -1, size is 2, start location is 0x1ce401d, logical location (offset) is 13
+The file content before overriden is: __
+###########################################
+The 2 ticks of the consumer 0 ends
+$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+
+
+
+$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+The 2 ticks of the consumer 1 starts at time 2002834
+the current file 4 is already deleted
+The 2 ticks of the consumer 1 ends
+$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+
+
+
+$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+The 5 producer starts at time 3002638
+Insert file 5 at 13 with size 6
+###########################################
+The logical disk is: 
+the start is 0, the hole is 0, the end is 10
+the start is 10, the hole is 0, the end is 13
+the start is 13, the hole is 0, the end is 19
+the start is 19, the hole is 181, the end is 200
+###########################################
+###########################################
+The file table is: 
+0: index is -1, size is 2, start location is 0x1ce4010, logical location (offset) is 0
+The file content before overriden is: __
+1: index is 1, size is 10, start location is 0x1ce4010, logical location (offset) is 0
+The file content is: lhXDs!*
+2: index is -1, size is 9, start location is 0x1ce401a, logical location (offset) is 10
+The file content before overriden is: _________
+3: index is 3, size is 3, start location is 0x1ce401a, logical location (offset) is 10
+The file content is: mX
+4: index is -1, size is 2, start location is 0x1ce401d, logical location (offset) is 13
+The file content before overriden is: __
+5: index is 5, size is 6, start location is 0x1ce401d, logical location (offset) is 13
+The file content is: \Vx4
+###########################################
+The 5 producer ends
+$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+
+
+
+$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+The 6 producer starts at time 3002934
+Insert file 6 at 19 with size 6
+###########################################
+The logical disk is: 
+the start is 0, the hole is 0, the end is 10
+the start is 10, the hole is 0, the end is 13
+the start is 13, the hole is 0, the end is 19
+the start is 19, the hole is 0, the end is 25
+the start is 25, the hole is 175, the end is 200
+###########################################
+###########################################
+The file table is: 
+0: index is -1, size is 2, start location is 0x1ce4010, logical location (offset) is 0
+The file content before overriden is: __
+1: index is 1, size is 10, start location is 0x1ce4010, logical location (offset) is 0
+The file content is: lhXDs!*
+2: index is -1, size is 9, start location is 0x1ce401a, logical location (offset) is 10
+The file content before overriden is: _________
+3: index is 3, size is 3, start location is 0x1ce401a, logical location (offset) is 10
+The file content is: mX
+4: index is -1, size is 2, start location is 0x1ce401d, logical location (offset) is 13
+The file content before overriden is: __
+5: index is 5, size is 6, start location is 0x1ce401d, logical location (offset) is 13
+The file content is: \Vx4
+6: index is 6, size is 6, start location is 0x1ce4023, logical location (offset) is 19
+The file content is: '"5Qi
+###########################################
+The 6 producer ends
+$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+
+
+
+$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+The 2 ticks of the consumer 2 starts at time 3003167
+the current file 4 is already deleted
+The 2 ticks of the consumer 2 ends
+$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+
+
+
+$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+The 3 ticks of the consumer 0 starts at time 3003288
+the current file 0 is already deleted
+The 3 ticks of the consumer 0 ends
+$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+
+
+
+$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+The 7 producer starts at time 4003314
+Insert file 7 at 25 with size 2
+###########################################
+The logical disk is: 
+the start is 0, the hole is 0, the end is 10
+the start is 10, the hole is 0, the end is 13
+the start is 13, the hole is 0, the end is 19
+the start is 19, the hole is 0, the end is 25
+the start is 25, the hole is 0, the end is 27
+the start is 27, the hole is 173, the end is 200
+###########################################
+###########################################
+The file table is: 
+0: index is -1, size is 2, start location is 0x1ce4010, logical location (offset) is 0
+The file content before overriden is: __
+1: index is 1, size is 10, start location is 0x1ce4010, logical location (offset) is 0
+The file content is: lhXDs!*
+2: index is -1, size is 9, start location is 0x1ce401a, logical location (offset) is 10
+The file content before overriden is: _________
+3: index is 3, size is 3, start location is 0x1ce401a, logical location (offset) is 10
+The file content is: mX
+4: index is -1, size is 2, start location is 0x1ce401d, logical location (offset) is 13
+The file content before overriden is: __
+5: index is 5, size is 6, start location is 0x1ce401d, logical location (offset) is 13
+The file content is: \Vx4
+6: index is 6, size is 6, start location is 0x1ce4023, logical location (offset) is 19
+The file content is: '"5Qi
+7: index is 7, size is 2, start location is 0x1ce4029, logical location (offset) is 25
+The file content is: #
+###########################################
+The 7 producer ends
+$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+
+
+
+producer has already generated 8 files
+

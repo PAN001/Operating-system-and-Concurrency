@@ -21,13 +21,12 @@ int main(int argc,char *argv[]) {
 		printf("failed to open shared memory\n");
 		exit(1); 
 	}
-	int *i_ptr = mmap(NULL, SIZE_OF_MEMORY, PROT_READ | PROT_WRITE, MAP_SHARED, shm_fd, 0); // i_ptr指针所指向的内存即为共享内存
+	int *i_ptr = mmap(NULL, SIZE_OF_MEMORY, PROT_READ | PROT_WRITE, MAP_SHARED, shm_fd, 0); // map the file into memory
 	int i;
 	int result = *(i_ptr+START_INDEX-1);
 	for(i = START_INDEX;i < START_INDEX + NUM_OF_ITERATIONS;i++) {
 		result = result * 2;
 		*(i_ptr+i) = result;
-		// printf("result is %d\n", result);
 	}
 }
 	
