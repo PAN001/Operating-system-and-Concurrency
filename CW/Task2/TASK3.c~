@@ -420,7 +420,7 @@ void* consumer(void* parameters) {
 
 			fileTable[random].index = -1; // set the index of the corresponding file to -1
 			// numOfFilesLeft--;
-			sem_post(&numOfFilesLeft); // restore the deleted number
+			sem_post(&numOfFilesLeft) // restore the deleted number
 		}
 		else {
 			printf("the current file is already deleted\n");
