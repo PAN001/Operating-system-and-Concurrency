@@ -419,7 +419,8 @@ void* consumer(void* parameters) {
 			memset (diskStartPtr, '-', sizeof(char) * offset); // delete the file from the disk
 
 			fileTable[random].index = -1; // set the index of the corresponding file to -1
-			numOfFilesLeft--;
+			// numOfFilesLeft--;
+			sem_post(&numOfFilesLeft) // restore the deleted number
 		}
 		else {
 			printf("the current file is already deleted\n");
